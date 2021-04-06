@@ -8,7 +8,7 @@ Requirements:
 Knows bugs:
 - If the scenario fails, the browser is not closed
 
-Needed improvements:
-- Some functions are not in the right place
-- Should introduce ability the test should be execute in other browsers
-- Instead hardcoding the chromedriver, need to implement docker
+Setup:
+- If nothing is set the gui tests run with chrome. Otherwise if env variable named browser is set to chrome or firefox
+
+This is tested on MacOs Catalina and it's running against both browsers. Anyway the drivers are added in project for windows also

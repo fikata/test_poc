@@ -13,16 +13,14 @@ Feature: Api Test
 
   Scenario: End to end
     Given I'm going to create user
-    And I'm going to create 2 books
-    Then Going to get books data
-    And Going to add more book
-    Then Going to get books data
-    And Going to remove one book
-    Then Going to get books data
+    And I'm going to get user information
+    And Going to add book to the user
+    And Going to get books data from user
+    Then Going to remove book from user
 
   Scenario: Delete user
     Given I'm going to create user
-    And Delete this user
-    Then Check the user is deleted
+    And I'm going to get user information
+    And Delete the user
 
 

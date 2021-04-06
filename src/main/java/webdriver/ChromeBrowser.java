@@ -33,28 +33,39 @@ public class ChromeBrowser{
     @And("^I'm going to run Browser$")
     public void selectBrowser() throws Throwable{
         String projectPath = System.getProperty("user.dir");
-        System.out.println(System.getProperty("os.name"));
         if ( System.getProperty("os.name").startsWith("Mac")){
-            if (System.getenv("browser") == "chrome"){
-                System.setProperty("webdriver.chrome.driver", "");
-                driver = new ChromeDriver();
-            } else if (System.getenv("browser") == "firefox") {
-                System.setProperty("webdriver.gecko.driver","");
-                driver = new FirefoxDriver();
-
-            } else {
-                System.setProperty("webdriver.chrome.driver", "");
+            if (System.getenv("browser") != null) { //handle null pointer
+                if (System.getenv("browser").equals("chrome") ) {
+                    System.setProperty("webdriver.chrome.driver", projectPath + "/drivers/mac/chromedriver");
+                    driver = new ChromeDriver();
+                } else if (System.getenv("browser").equals("firefox")) {
+                    System.setProperty("webdriver.gecko.driver", projectPath + "/drivers/mac/geckodriver");
+                    driver = new FirefoxDriver();
+                }
+                else {
+                    System.setProperty("webdriver.chrome.driver", projectPath + "/drivers/mac/chromedriver");
+                    driver = new ChromeDriver();
+                }
+            }
+             else {
+                System.setProperty("webdriver.chrome.driver", projectPath + "/drivers/mac/chromedriver");
                 driver = new ChromeDriver();
             }
         } else if (System.getProperty("os.name").startsWith("Windows")) {
-            if (System.getenv("browser") == "chrome"){
-                System.setProperty("webdriver.chrome.driver", "");
-                driver = new ChromeDriver();
-            } else if (System.getenv("browser") == "firefox") {
-                System.setProperty("webdriver.gecko.driver","");
-                driver = new FirefoxDriver();
+            if (System.getenv("browser") != null) {
+                if (System.getenv("browser").equals("chrome")){
+                    System.setProperty("webdriver.chrome.driver", "");
+                    driver = new ChromeDriver();
+                } else if (System.getenv("browser").equals("firefox")) {
+                    System.setProperty("webdriver.gecko.driver","");
+                    driver = new FirefoxDriver();
 
-            } else {
+                } else {
+                    System.setProperty("webdriver.chrome.driver", "");
+                    driver = new ChromeDriver();
+                }
+            }
+            else {
                 System.setProperty("webdriver.chrome.driver", "");
                 driver = new ChromeDriver();
             }
@@ -94,5 +105,4 @@ public class ChromeBrowser{
         File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         FileUtils.copyFile(src, new File(pathname));
     }
-
 }

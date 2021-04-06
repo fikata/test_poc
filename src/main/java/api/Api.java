@@ -18,6 +18,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Random;
 
 import static io.restassured.RestAssured.*;
@@ -111,11 +114,12 @@ public class Api {
         request.body(requestParams.toString());
         request.header("Content-Type","application/json");
         Response response = request.post("Account/v1/GenerateToken");
+        System.out.println(response.getBody().asString());
         return response.jsonPath().get("token");
     }
 
     @Then("^I'm going to get user information$")
-    public static void getUserInfo() {
+    public static Response getUserInfo() {
         RestAssured.baseURI ="https://www.demoqa.com";
         RequestSpecification request = RestAssured.given();
         JSONObject requestParams = new JSONObject();
@@ -124,9 +128,8 @@ public class Api {
 
         request.body(requestParams.toString());
         request.header("Content-Type","application/json");
-        String token = generateToken();
-        System.out.println(token);
-        request.header("Authorization","Bearer " + token);
+        data.addData("token",generateToken());
+        request.header("Authorization","Bearer " + data.getData("token"));
 
         Response response = request.get("Account/v1/User/" + data.getData("uuid"));
 
@@ -134,7 +137,105 @@ public class Api {
         Assert.assertEquals(statusCode, 200);
         System.out.println(response.getBody().asString());
         Assert.assertEquals(response.jsonPath().get("username"),data.getData("user"));
+        return response;
     }
+
+    @Then("^Going to add book to the user$")
+    public static void createBooks() {
+        RestAssured.baseURI ="https://www.demoqa.com";
+        RequestSpecification request = RestAssured.given();
+        JSONObject requestParams = new JSONObject();
+        data.addData("book1",getBookIsbn(1));
+
+        requestParams.put("userId", data.getData("uuid"));
+        requestParams.put("collectionOfIsbns", Arrays.asList(new LinkedHashMap<String, Object>() {
+            {
+                put("isbn", data.getData("book1"));
+            }
+        }));
+        request.body(requestParams.toString());
+        request.header("Content-Type","application/json");
+        request.header("Authorization","Bearer " + data.getData("token"));
+
+        Response response = request.post("BookStore/v1/Books/");
+
+        int statusCode = response.getStatusCode();
+        Assert.assertEquals(statusCode, 201);
+        System.out.println(response.getBody().asString());
+        Assert.assertEquals(response.jsonPath().get("books[0].isbn"), data.getData("book1"));
+    }
+
+    @Then("^Going to get books data from user$")
+    public static void getBooksFromUser() {
+        Response response = getUserInfo();
+        Assert.assertEquals(response.jsonPath().get("books[0].isbn"),data.getData("book1"));
+    }
+
+    @Then("^Going to remove book from user$")
+    public static void deleteBookFromUser() {
+        RestAssured.baseURI ="https://www.demoqa.com";
+        RequestSpecification request = RestAssured.given();
+        JSONObject requestParams = new JSONObject();
+
+        requestParams.put("userId", data.getData("uuid"));
+        requestParams.put("isbn", data.getData("book1"));
+        request.body(requestParams.toString());
+        request.header("Content-Type","application/json");
+        request.header("Authorization","Bearer " + data.getData("token"));
+
+        Response response = request.delete("BookStore/v1/Book");
+        int statusCode = response.getStatusCode();
+        Assert.assertEquals(statusCode, 204);
+        System.out.println(response.getBody().asString());
+    }
+
+    @Then("^Delete the user$")
+    public static void deleteUser() {
+        RestAssured.baseURI ="https://www.demoqa.com";
+        RequestSpecification request = RestAssured.given();
+//        JSONObject requestParams = new JSONObject();
+//
+//        requestParams.put("userId", data.getData("uuid"));
+//        request.body(requestParams.toString());
+        request.header("Content-Type","application/json");
+        request.header("Authorization","Bearer " + data.getData("token"));
+        String path = "Account/v1/User/" + data.getData("uuid");
+        System.out.println(path);
+        System.out.println(data.getData("token"));
+        System.out.println();
+        Response response = request.delete("Account/v1/User/" + data.getData("uuid"));
+        int statusCode = response.getStatusCode();
+        Assert.assertEquals(statusCode, 204);
+        System.out.println(response.getBody().asString());
+    }
+
+
+
+
+    public static String getBookIsbn(int number) {
+        RestAssured.baseURI ="https://www.demoqa.com";
+        RequestSpecification request = RestAssured.given();
+//        JSONObject requestParams = new JSONObject();
+//        requestParams.put("uuid", data.getData("user"));
+//
+//
+//        request.body(requestParams.toString());
+        request.header("Content-Type","application/json");
+        request.header("Authorization","Bearer " + data.getData("token"));
+
+        Response response = request.get("BookStore/v1/Books");
+
+        int statusCode = response.getStatusCode();
+        Assert.assertEquals(statusCode, 200);
+       // Assert.assertEquals(response.jsonPath().get("username"),data.getData("user"));
+
+        List<String> allIsbn = response.jsonPath().getList("books.isbn");
+        System.out.println(allIsbn.get(number));
+
+        return allIsbn.get(number);
+    }
+
+
 
 
 

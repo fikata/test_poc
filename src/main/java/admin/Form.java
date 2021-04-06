@@ -1,32 +1,14 @@
 package admin;
 
-
-import gherkin.lexer.Th;
 import helpers.StoreData;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
-
 import static webdriver.ChromeBrowser.driver;
-
 import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
-import org.testng.Assert;
 import webdriver.ChromeBrowser;
-
-import java.io.File;
-import java.io.IOException;
-
 
 public class Form{
 
-    //private final WebDriver driver = new ChromeDriver();
-
     public static String demoqaForm_URL = "https://www.demoqa.com/automation-practice-form";
-
-    //*[@id="firstName"]
     public static String firstName_FIELD = "firstName";
     public static String lastName_FIELD = "lastName";
     public static String userEmail_FIELD = "userEmail";
@@ -37,15 +19,9 @@ public class Form{
     public static String state_SELECT = "react-select-3-input";
     public static String uploadFile_FIELD = "//input[@id='uploadPicture']";
     public static String submitForm_BTN = "submit";
-
-
-
-
-
     public static String form_email_FIELD = "//input[@name='email']";
     public static String form_password_FIELD = "//input[@name='password']";
     public static String submit_BTN = "//button[@type='submit']";
-
     public static String logout_BTN = "//a[contains(text(),'Log Out')]";
 
     @Given("^I'm fill all fields with valid data firstname etc$")
@@ -60,8 +36,6 @@ public class Form{
         driver.findElement(By.id(mobilePhone_FIELD)).sendKeys(data.getData("mobilePhone"));
         datePickerClearAndAddValue(data.getData("dateOfBirth"));
         uploadFile();
-
-        //driver.findElement(By.id(submitForm_BTN)).click();
         submitForm();
     }
 

@@ -1,16 +1,8 @@
 package admin;
-import gherkin.lexer.Th;
 import helpers.StoreData;
 import org.openqa.selenium.By;
-
 import static webdriver.ChromeBrowser.driver;
-
 import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import webdriver.ChromeBrowser;
 
@@ -29,14 +21,6 @@ public class SubmitModal {
     public void assertAllFields() throws Throwable {
         ChromeBrowser.waitForElementById(titleModal_TEXT, 3);
         StoreData inputData = Form.generateInputData();
-//        data.addData("firstName","Gosho");
-//        data.addData("lastName","Mosho");
-//        data.addData("userEmail","email@email.email");
-//        data.addData("mobilePhone","2345234523");
-//        data.addData("dateOfBirth","01/01/1999");
-
-        ChromeBrowser.takeScreenshot("./testmest.jpg");
-
         Assert.assertEquals(this.getFirstName(firstNameValue_FIELD),
                 inputData.getData("firstName") + " " + inputData.getData("lastName") );
 
