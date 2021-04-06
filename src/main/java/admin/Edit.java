@@ -50,7 +50,7 @@ public class Edit {
     public void logoutFromAdmin(){
         ChromeBrowser.waitForElement(logout_BTN);
         driver.findElement(By.xpath(logout_BTN)).click();
-        ChromeBrowser.waitForElement(Login.submit_BTN);
+        ChromeBrowser.waitForElement(Form.submit_BTN);
     }
 
     @Given("^I'm going to change the price = (.*?) and get values for later use$")
